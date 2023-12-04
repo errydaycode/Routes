@@ -1,23 +1,54 @@
 import React from 'react';
-import {PagesType} from "../data/dataState";
-import {useParams} from "react-router-dom";
+import {PagesType} from "../../data/dataState";
+import {Navigate, useLocation, useNavigate, useParams} from "react-router-dom";
+import { Error404 } from './Error404';
 
-
-type PropsType={
+type PropsType ={
     pages: PagesType[]
 }
 
-export const Page = (props: PropsType) => {
+
+export const Page: React.FC<PropsType> = ({pages}) => {
+
     const params = useParams()
-    console.log(params.id)
+    const location = useLocation()
+    const navigate = useNavigate()
+    const onBackClickHandler =()=> {
+        navigate(-1)
+    }
+
+    const onMainClickHandler = () => {
+      navigate("/page/0")
+    }
+
 
     return (
-        <div>
+
+
+
+
+    <div>
+        {location.pathname === '/page/0' && <div>SECRET TEXT</div>}
+        {pages[Number(params.id)] ?
             <div>
-                {props.pages[Number(params.id)].heading}
-                {props.pages[Number(params.id)].about}
+                <div>{pages[Number(params.id)].heading}</div>
+                <div>{pages[Number(params.id)].about}</div>
+                <div>
+                    <button onClick={onBackClickHandler}>back</button>
+                    <button onClick={onMainClickHandler}>main</button>
+                </div>
+
             </div>
-        </div>
+
+        : <Navigate to={'/page/error'}/>
+
+
+        }
+        {/*<div>{pages[Number(params.id)].heading}</div>*/}
+        {/*<div>{pages[Number(params.id)].about}</div>*/}
+    </div>
+
+
     );
 };
 
